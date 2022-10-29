@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import debounce from 'lodash.debounce';
+// import debounce from 'lodash.debounce';
+import { useLocalStorage, useDebounce } from 'react-use';
 
-import { initialState, storageKey } from './constants/Constants';
-import { load, save } from './utils/localstorage';
+import { initialContacts, storageKey } from './constants/Constants';
 import * as Section from './Section/Section';
 import ContactForm from './ContactForm/ContactForm';
 import ContactsList from './ContactsList/ContactsList';
@@ -12,77 +12,48 @@ import Filter from './Filter/Filter';
 
 import { GlobalStyle } from './GlobalStyle/GlobalStyle.styled';
 
-export class App extends Component {
-  state = { contacts: [], filter: '' };
+export const App = () => {
+  const [contacts, setContacts] = useLocalStorage(storageKey, initialContacts);
+  const [filter, setFilter] = useState('');
+  const [debouncedFilter, setDebouncedFilter] = useState('');
 
-  componentDidMount() {
-    const contacts = load(storageKey);
-    this.setState(
-      contacts ? { contacts: contacts } : { contacts: initialState.contacts }
-    );
-  }
+  useDebounce(() => setDebouncedFilter(filter), 300, [filter]);
 
-  componentDidUpdate(prevProps, prevState) {
-    const newContacts = this.state.contacts;
-    if (newContacts !== prevState.contacts) {
-      save(storageKey, newContacts);
-    }
-  }
-
-  handleSubmit = ({ id, name, number }) => {
-    const contact = {
-      id,
-      name,
-      number,
-    };
-    if (this.state.contacts.find(contact => contact.name === name)) {
+  const handleSubmit = ({ id, name, number }) => {
+    if (contacts.find(contact => contact.name === name)) {
       Notify.info(`${name} is already in contacts`);
       return false;
     }
-    this.setState(({ contacts }) => ({ contacts: [...contacts, contact] }));
+    setContacts([...contacts, { id, name, number }]);
     return true;
   };
 
-  handleContactDelete = ({ id }) => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
+  const handleContactDelete = ({ id }) => {
+    setContacts(contacts.filter(contact => contact.id !== id));
   };
 
-  handleFilterChange = ({ value }) => {
-    this.setState({ filter: value });
-  };
+  const handleFilterChange = ({ value }) => setFilter(value);
 
-  handleFilterChangeDebounced = debounce(this.handleFilterChange, 500);
-
-  handleDeleteContact = ({ id }) => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
-  };
-
-  render() {
-    const { contacts, filter } = this.state;
-    let filteredContacts = contacts;
-    if (filter) {
-      filteredContacts = contacts.filter(({ name }) => {
-        return name.toLowerCase().includes(filter.toLowerCase());
-      });
-    }
-    return (
-      <>
-        <GlobalStyle />
-        <Section.H1 title="Phonebook">
-          <ContactForm onSubmit={this.handleSubmit} />
-        </Section.H1>
-        <Section.H2 title="Contacts">
-          <Filter onInput={this.handleFilterChangeDebounced} />
-          <ContactsList
-            contacts={filteredContacts}
-            onDelete={this.handleContactDelete}
-          />
-        </Section.H2>
-      </>
-    );
+  let filteredContacts = contacts;
+  if (debouncedFilter) {
+    filteredContacts = contacts.filter(({ name }) => {
+      return name.toLowerCase().includes(debouncedFilter.toLowerCase());
+    });
   }
-}
+
+  return (
+    <>
+      <GlobalStyle />
+      <Section.H1 title="Phonebook">
+        <ContactForm onSubmit={handleSubmit} />
+      </Section.H1>
+      <Section.H2 title="Contacts">
+        <Filter onInput={handleFilterChange} />
+        <ContactsList
+          contacts={filteredContacts}
+          onDelete={handleContactDelete}
+        />
+      </Section.H2>
+    </>
+  );
+};
