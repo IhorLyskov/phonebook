@@ -1,26 +1,39 @@
-import PropTypes from 'prop-types';
-import Contact from '../Contact/Contact';
-import { UlStyled } from './ContactsList.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from '../../redux/contactsSlice';
+import {
+  ContactListStyled,
+  ContactItemStyled,
+  ContactStyled,
+  DeleteButton,
+} from './ContactsList.styled';
 
-function ContactList({ contacts, onDelete }) {
+const ContactsList = () => {
+  const contacts = useSelector(state => state.contacts.contacts);
+  const filter = useSelector(state => state.filter.filter);
+  const dispatch = useDispatch();
+
+  const filteredContacts = (contacts, filter) =>
+    contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id));
+  };
+
   return (
-    <UlStyled>
-      {contacts.map(({ id, name, number }) => (
-        <Contact
-          key={id}
-          id={id}
-          name={name}
-          number={number}
-          onDelete={onDelete}
-        />
+    <ContactListStyled>
+      {filteredContacts(contacts, filter).map(({ id, name, number }) => (
+        <ContactItemStyled key={id}>
+          <ContactStyled>{name}:</ContactStyled>{' '}
+          <ContactStyled>{number}</ContactStyled>
+          <DeleteButton type="button" onClick={() => handleDeleteContact(id)}>
+            Delete
+          </DeleteButton>
+        </ContactItemStyled>
       ))}
-    </UlStyled>
+    </ContactListStyled>
   );
-}
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(PropTypes.shape),
-  onDelete: PropTypes.func,
 };
 
-export default ContactList;
+export default ContactsList;

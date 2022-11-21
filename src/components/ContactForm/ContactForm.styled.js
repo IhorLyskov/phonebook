@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Form, Field, ErrorMessage } from 'formik';
 
 export const ErrorMessageStyled = styled(ErrorMessage)`
-  color: ${p => p.theme.color.colorErrorMessage};
+  color: ${p => p.theme.colors.colorErrorMessage};
   margin-bottom: ${p => p.theme.space[1]}px;
 `;
 
@@ -15,7 +15,7 @@ export const FormStyled = styled(Form)`
   margin-top: ${p => p.theme.space[4]}px;
   font-size: ${p => p.theme.fontSize[2]}px;
   border: ${p => p.theme.border.normal};
-  border-color: ${p => p.theme.color.colorFormBorder};
+  border-color: ${p => p.theme.colors.colorFormBorder};
   border-radius: ${p => p.theme.radius.normal};
 `;
 
@@ -28,12 +28,12 @@ export const FieldStyled = styled(Field)`
   margin-bottom: ${p => p.theme.space[2]}px;
   width: ${p => p.theme.space[9]}px;
   border: ${p => p.theme.border.normal};
-  border-color: ${p => p.theme.color.colorBorder};
+  border-color: ${p => p.theme.colors.colorBorder};
   border-radius: ${p => p.theme.radius.normal};
   font-size: ${p => p.theme.fontSize[1]}px;
   :hover {
-    border-color: ${p => p.theme.color.colorComponentBg};
-    box-shadow: 0 0 4px 2px ${p => p.theme.color.colorAccent};
+    border-color: ${p => p.theme.colors.colorComponentBg};
+    box-shadow: 0 0 4px 2px ${p => p.theme.colors.colorAccent};
   }
 `;
 
@@ -47,15 +47,14 @@ export const ButtonStyled = styled.button`
   font-weight: ${p => p.theme.fontWeight.medium};
 
   border: ${p => p.theme.border.normal};
-  border-color: ${p => p.theme.color.colorBorder};
+  border-color: ${p => p.theme.colors.colorBorder};
   border-radius: ${p => p.theme.radius.normal};
 
-  background-color: ${p => p.theme.color.colorComponentBg};
+  background-color: ${p => p.theme.colors.colorComponentBg};
 
   :hover {
-    border-color: ${p => p.theme.color.colorAccent};
-    background-color: ${p => p.theme.color.colorAccent};
-    color: ${p => p.theme.color.colorComponentBg};
-    /* box-shadow: 0 0 4px 2px ${p => p.theme.color.colorAccent}; */
+    border-color: ${p => p.theme.colors.colorAccent};
+    background-color: ${p => p.theme.colors.colorAccent};
+    color: ${p => p.theme.colors.colorComponentBg};
   }
 `;

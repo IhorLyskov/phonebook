@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { customAlphabet } from 'nanoid';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -30,12 +30,22 @@ const schema = Yup.object().shape({
     .required('This field is required!'),
 });
 
-function ContactForm({ onSubmit }) {
+function ContactForm() {
+  const contacts = useSelector(state => state.contacts.contacts);
+  const dispatch = useDispatch();
+
   const handleSubmit = ({ name, number }, { resetForm }) => {
-    const id = 'id-' + customAlphabet('1234567890', 3)();
-    if (onSubmit({ id, name, number })) {
-      resetForm();
+    if (contacts.some(contact => contact.name === name)) {
+      Notify.info(`${name} is already in contacts`);
+      return;
     }
+    const contact = {
+      id: 'id-' + customAlphabet('1234567890', 3)(),
+      name,
+      number,
+    };
+    dispatch(addContact(contact));
+    resetForm();
   };
 
   return (
@@ -58,7 +68,5 @@ function ContactForm({ onSubmit }) {
     </Formik>
   );
 }
-
-ContactForm.tropTypes = { handleSubmit: PropTypes.func };
 
 export default ContactForm;

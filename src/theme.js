@@ -1,5 +1,5 @@
 export const theme = {
-  color: {
+  colors: {
     colorComponentBg: '#fff',
     colorFormBorder: '#000',
     colorBorder: '#e0e0e0',
@@ -20,5 +20,9 @@ export const theme = {
   radius: {
     none: '0',
     normal: '4px',
+  },
+  sizes: {
+    input: '200px',
+    button: '120px',
   },
 };
