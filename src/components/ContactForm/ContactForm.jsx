@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contactsSlice';
+import { addContact } from '../../redux/operations';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { customAlphabet } from 'nanoid';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { namePattern, phonePattern } from '../constants/Constants';
+import { selectContacts } from '../../redux/selectors';
 
 import {
   FormStyled,
@@ -22,7 +23,7 @@ const schema = Yup.object().shape({
     )
     .required('This field is required!'),
 
-  number: Yup.string()
+  phone: Yup.string()
     .matches(
       phonePattern,
       'Phone number must be digits and can contain spaces, dashes, parentheses and can start with +!'
@@ -31,10 +32,10 @@ const schema = Yup.object().shape({
 });
 
 function ContactForm() {
-  const contacts = useSelector(state => state.contacts.contacts);
+  const contacts = useSelector(selectContacts);
   const dispatch = useDispatch();
 
-  const handleSubmit = ({ name, number }, { resetForm }) => {
+  const handleSubmit = ({ name, phone }, { resetForm }) => {
     if (contacts.some(contact => contact.name === name)) {
       Notify.info(`${name} is already in contacts`);
       return;
@@ -42,15 +43,16 @@ function ContactForm() {
     const contact = {
       id: 'id-' + customAlphabet('1234567890', 3)(),
       name,
-      number,
+      phone,
     };
+    console.log(contact);
     dispatch(addContact(contact));
     resetForm();
   };
 
   return (
     <Formik
-      initialValues={{ name: '', number: '' }}
+      initialValues={{ name: '', phone: '' }}
       validationSchema={schema}
       onSubmit={handleSubmit}
     >
@@ -59,9 +61,9 @@ function ContactForm() {
         <FieldStyled type="text" name="name" />
         <ErrorMessageStyled name="name" component="div" />
 
-        <LabelStyled htmlFor="number">Number</LabelStyled>
-        <FieldStyled type="tel" name="number" />
-        <ErrorMessageStyled name="number" component="div" />
+        <LabelStyled htmlFor="phone">Number</LabelStyled>
+        <FieldStyled type="tel" name="phone" />
+        <ErrorMessageStyled name="phone" component="div" />
 
         <ButtonStyled type="submit">Add contact</ButtonStyled>
       </FormStyled>
