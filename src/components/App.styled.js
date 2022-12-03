@@ -10,3 +10,6 @@ export const ContactTitle = styled.h2`
 export const Container = styled.div`
   padding: ${p => p.theme.space[5]}px;
 `;
+export const Loading = styled.h4`
+  margin: ${p => p.theme.space[4]}px 0;
+`;

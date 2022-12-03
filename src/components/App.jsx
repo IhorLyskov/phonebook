@@ -5,7 +5,7 @@ import { selectError, selectIsLoading } from '../redux/selectors';
 import ContactForm from './ContactForm/ContactForm';
 import ContactsFilter from './ContactsFilter/ContactsFilter';
 import ContactsList from './ContactsList/ContactsList';
-import { PhoneBookTitle, ContactTitle, Container } from './App.styled';
+import { PhoneBookTitle, ContactTitle, Container, Loading } from './App.styled';
 import { GlobalStyle } from './GlobalStyle/GlobalStyle.styled';
 
 export const App = () => {
@@ -24,7 +24,7 @@ export const App = () => {
       <ContactForm />
       <ContactTitle>Contacts</ContactTitle>
       <ContactsFilter />
-      {isLoading && !error && <b>Request in progress...</b>}
+      {isLoading && !error && <Loading>Request in progress...</Loading>}
       <ContactsList />
     </Container>
   );
