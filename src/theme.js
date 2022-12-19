@@ -1,13 +1,14 @@
 export const theme = {
   colors: {
     colorComponentBg: '#fff',
-    colorFormBorder: '#000',
+    colorText: '#000',
     colorBorder: '#e0e0e0',
+    colorKeyBg: 'rgb(0, 153, 230, 0.75)',
     colorAccent: '#0099e6',
     colorErrorMessage: 'red',
   },
-  space: [2, 5, 10, 15, 20, 30, 35, 50, 80, 128, 320],
-  fontSize: [10, 12, 16],
+  space: [2, 4, 8, 16, 20, 30, 35, 50, 80, 128, 380, 400],
+  fontSize: [10, 14, 16, 20, 24],
   fontWeight: {
     normal: 400,
     medium: 500,
